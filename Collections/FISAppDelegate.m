@@ -73,9 +73,144 @@
     
 }
 
-//- (NSInteger *) sumOfIntegersInArray: (NSInteger *)array
-//{
+-(NSArray *)namesOfHobbitsInDictionary:(NSDictionary *)dictionary
+{
+    NSMutableArray *hobbits = [[NSMutableArray alloc] init];
     
-//}
+    for (NSString *key in dictionary)
+    {
+        if ([dictionary[key] isEqualToString:@"hobbit"])
+        {
+            [hobbits addObject:key];
+        }
+    }
+    
+    return [NSArray arrayWithArray:hobbits];
+}
+
+-(NSArray *)stringsBeginningWithAInArray:(NSArray *)array
+{
+    
+    NSPredicate *beginsWithAPredicate = [NSPredicate predicateWithFormat:@"self BEGINSWITH[c] 'a'"];
+    NSArray *beginsWithA = [array filteredArrayUsingPredicate:beginsWithAPredicate];
+    
+    return beginsWithA;
+}
+
+
+- (NSInteger)sumOfIntegersInArray:(NSArray *)integers;
+{
+        NSInteger sum = 0;
+    
+        for (NSNumber *total in integers)
+        {
+                sum += [total integerValue];
+        }
+    
+        return sum;
+}
+
+
+-(NSArray *)arrayByPluralizingStringsInArray:(NSArray *)array
+{
+    NSMutableArray *plurals = [[NSMutableArray alloc] init];
+    
+    for (NSString *singular in array)
+    {
+        NSString *plural = @"";
+        if ([singular containsString:@"oo"])
+        {
+            plural = [singular stringByReplacingOccurrencesOfString:@"oo" withString:@"ee"];
+        } else if ([singular containsString:@"ox"])
+        {
+            if ([singular hasPrefix:@"b"])
+            {
+                plural = [singular stringByAppendingString:@"es"];
+            } else
+            {
+                plural = [singular stringByAppendingString:@"en"];
+            }
+        }
+        else if ([singular hasSuffix:@"us"])
+        {
+            plural = [singular stringByReplacingOccurrencesOfString:@"us" withString:@"i"];
+        }
+        else if ([singular hasSuffix:@"um"])
+        {
+            plural = [singular stringByReplacingOccurrencesOfString:@"um" withString:@"a"];
+        }
+        else
+        {
+            plural = [singular stringByAppendingString:@"s"];
+        }
+        
+        [plurals addObject:plural];
+    }
+    
+    return [NSArray arrayWithArray:plurals];
+}
+
+
+-(NSDictionary *)countsOfWordsInString:(NSString *)string
+{
+    NSArray *punctuationStrings = @[@".", @",", @";", @"-"];
+    
+    NSString *noPunctuation = string;
+    
+    for (NSString *punctuation in punctuationStrings)
+    {
+        noPunctuation = [noPunctuation stringByReplacingOccurrencesOfString:punctuation withString:@""];
+    }
+    
+    NSString *lowercaseNoPunctuation = [noPunctuation lowercaseString];
+    
+    NSArray *arrayOfWords = [lowercaseNoPunctuation componentsSeparatedByString:@" "];
+    
+    NSMutableDictionary *countsOfWords = [[NSMutableDictionary alloc] init];
+    
+    for (NSString *word in arrayOfWords)
+    {
+        if ([countsOfWords[word] integerValue] > 0)
+        {
+            NSInteger newCount = [countsOfWords[word] integerValue] + 1;
+            countsOfWords[word] = @(newCount);
+        }
+        else
+        {
+            countsOfWords[word] = @1;
+        }
+    }
+    
+    return [NSDictionary dictionaryWithDictionary:countsOfWords];
+}
+
+-(NSDictionary *)songsGroupedByArtistFromArray:(NSArray *)array
+{
+    NSMutableDictionary *artistsWithSongs = [[NSMutableDictionary alloc] init];
+    
+    for (NSString *string in array)
+    {
+        NSArray *artistAndSong = [string componentsSeparatedByString:@" - "];
+        NSString *artist = artistAndSong[0];
+        NSString *song = artistAndSong[1];
+        
+        if ([[artistsWithSongs allKeys] containsObject:artist])
+        {
+            [artistsWithSongs[artist] addObject:song];
+        }
+        else
+        {
+            artistsWithSongs[artist] = [ @[song] mutableCopy];
+        }
+    }
+    
+    NSSortDescriptor *sortByNilAsc = [NSSortDescriptor sortDescriptorWithKey:nil ascending:YES];
+    for (NSString *artist in artistsWithSongs)
+    {
+        [artistsWithSongs[artist] sortUsingDescriptors:@[sortByNilAsc]];
+    }
+    
+    return [NSDictionary dictionaryWithDictionary:artistsWithSongs];
+}
 
 @end
